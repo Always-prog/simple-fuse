@@ -47,13 +47,9 @@ class SimpleFS(Operations):
                      'st_gid', 'st_mode', 'st_mtime', 'st_nlink', 'st_size', 'st_uid'))
 
     def readdir(self, path, fh):
-        full_path = self._search_file_path(path)
-
-        dirents = ['.', '..']
-        if os.path.isdir(full_path):
-            dirents.extend(os.listdir(full_path))
-        for r in dirents:
-            yield r
+        for store in self.stores:
+            for file in os.listdir(store):
+                yield file
 
     def readlink(self, path):
         pathname = os.readlink(self._search_file_path(path))
